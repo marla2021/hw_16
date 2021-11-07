@@ -34,7 +34,6 @@ class User(db.Model):
             "phone": self.phone,
         }
 
-
 class Order(db.Model):
     __tablename__ = 'order'
     id = db.Column(db.Integer, primary_key=True)
@@ -58,6 +57,7 @@ class Order(db.Model):
             "customer_id": self.customer_id,
             "executor_id": self.executor_id,
         }
+
 class Offer(db.Model):
     __tablename__ = 'offer'
     id = db.Column(db.Integer, primary_key=True)
@@ -115,8 +115,6 @@ for offer in offers:
     db.session.commit()
 
 
-
-
 @app.route("/users", methods=['GET','POST'])
 def users():
     if request.method == "GET":
@@ -150,7 +148,7 @@ def user(id):
         db.session.commit()
         return "",204
     elif request.method == 'PUT':
-        data = json.loads(request.data)
+        users = json.loads(request.data)
         u = User.query.get(id)
         u.first_name = user["first_name"],
         u.last_name = user["last_name"],
@@ -196,18 +194,18 @@ def order(id):
         db.session.commit()
         return "",204
     elif request.method == 'PUT':
-        data = json.loads(request.data)
-        order = Order.query.get(id)
-        order.id = order["id"],
-        order.name = order["name"],
-        order.description = order["description"],
-        order.start_date = order["start_date"],
-        order.end_date = order["end_date"],
-        order.address = order["address"],
-        order.price = order["price"],
-        order.customer_id = order["customer_id"],
-        order.executor_id = order["executor_id"]
-        db.session.add(order)
+        order = json.loads(request.data)
+        ord = Order.query.get(id)
+        ord.id = order["id"],
+        ord.name = order["name"],
+        ord.description = order["description"],
+        ord.start_date = order["start_date"],
+        ord.end_date = order["end_date"],
+        ord.address = order["address"],
+        ord.price = order["price"],
+        ord.customer_id = order["customer_id"],
+        ord.executor_id = order["executor_id"]
+        db.session.add(ord)
         db.session.commit()
         return "", 204
 
@@ -239,14 +237,14 @@ def offer(id):
         db.session.commit()
         return "",204
     elif request.method == 'PUT':
-        data = json.loads(request.data)
-        offer = Offer.query.get(id)
-        offer.id = offer["id"],
-        offer.order_id = offer["order_id"],
-        offer.executor_id = offer["executor_id"]
-        db.session.add(offer)
+        offer = json.loads(request.data)
+        off = Offer.query.get(id)
+        off.id = offer["id"],
+        off.order_id = offer["order_id"],
+        off.executor_id = offer["executor_id"]
+        db.session.add(off)
         db.session.commit()
-        return "", 204
+        return "", 204,{'Content-Type':'application/json; charset=UTF-8'}
 
 
 
