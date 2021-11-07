@@ -4,6 +4,7 @@ from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from data import users, orders, offers
 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///table.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -35,7 +36,7 @@ class User(db.Model):
 
 
 class Order(db.Model):
-    __tablename__ = 'orders'
+    __tablename__ = 'order'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text(50))
     description = db.Column(db.Text(200))
@@ -43,8 +44,8 @@ class Order(db.Model):
     end_date = db.Column(db.Integer)
     address = db.Column(db.Text(70))
     price = db.Column(db.Integer)
-    customer_id = db.Column(db.Integer,db.ForeingKey('user.id'))
-    executor_id = db.Column(db.Integer, db.ForeingKey('user.id'))
+    customer_id = db.Column(db.Integer,db.ForeignKey('user.id'))
+    executor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     def to_dict(self):
         return {
             "id":self.id,
@@ -60,8 +61,8 @@ class Order(db.Model):
 class Offer(db.Model):
     __tablename__ = 'offer'
     id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer,db.ForeingKey('order.id'))
-    executor_id = db.Column(db.Integer, db.ForeingKey('user.id'))
+    order_id = db.Column(db.Integer,db.ForeignKey('order.id'))
+    executor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     def to_dict(self):
         return {
             "id":self.id,
@@ -124,7 +125,7 @@ def users():
             res.append(u.to_dict())
         return json.dumps(res), 200,{'Content-Type':'application/json; charset=UTF-8'}
     elif request.method == "POST":
-        user = json.loads(request.values)
+        user = json.loads(request.data)
         new_user = User(
             first_name=user["first_name"],
             last_name=user["last_name"],
