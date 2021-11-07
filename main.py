@@ -127,6 +127,7 @@ def users():
     elif request.method == "POST":
         user = json.loads(request.data)
         new_user = User(
+            id = user["id"],
             first_name=user["first_name"],
             last_name=user["last_name"],
             age=user["age"],
@@ -170,7 +171,7 @@ def orders():
             res.append(ord.to_dict())
         return json.dumps(res), 200,{'Content-Type':'application/json; charset=UTF-8'}
     elif request.method == "POST":
-        orders = json.loads(request.data)
+        order = json.loads(request.data)
         new_order = Order(
             id=order["id"],
             name=order["name"],
@@ -190,23 +191,23 @@ def order(id):
     if request.method == "GET":
         return json.dumps(Order.query.get(id).to_dict()), 200
     elif request.method == 'DELETE':
-        orde = Order.query.get(id)
-        db.session.delete(orde)
+        order = Order.query.get(id)
+        db.session.delete(order)
         db.session.commit()
         return "",204
     elif request.method == 'PUT':
         data = json.loads(request.data)
-        orde = Order.query.get(id)
-        orde.id = order["id"],
-        orde.name = order["name"],
-        orde.description = order["description"],
-        orde.start_date = order["start_date"],
-        orde.end_date = order["end_date"],
-        orde.address = order["address"],
-        orde.price = order["price"],
-        orde.customer_id = order["customer_id"],
-        orde.executor_id = order["executor_id"]
-        db.session.add(orde)
+        order = Order.query.get(id)
+        order.id = order["id"],
+        order.name = order["name"],
+        order.description = order["description"],
+        order.start_date = order["start_date"],
+        order.end_date = order["end_date"],
+        order.address = order["address"],
+        order.price = order["price"],
+        order.customer_id = order["customer_id"],
+        order.executor_id = order["executor_id"]
+        db.session.add(order)
         db.session.commit()
         return "", 204
 
@@ -219,11 +220,11 @@ def offers():
             res.append(ofe.to_dict())
         return json.dumps(res), 200
     elif request.method == "POST":
-        offers = json.loads(request.data)
+        offer = json.loads(request.data)
         new_offer = Offer(
             id=offer["id"],
             order_id=offer["order_id"],
-            executor_id=offer["executor_id"]
+            executor_id=offer["executor_id"],
         )
         return "", 204
 
@@ -239,11 +240,11 @@ def offer(id):
         return "",204
     elif request.method == 'PUT':
         data = json.loads(request.data)
-        offe = Order.query.get(id)
-        offe.id = offer["id"],
-        offe.order_id = offer["order_id"],
-        offe.executor_id = offer["executor_id"]
-        db.session.add(offe)
+        offer = Offer.query.get(id)
+        offer.id = offer["id"],
+        offer.order_id = offer["order_id"],
+        offer.executor_id = offer["executor_id"]
+        db.session.add(offer)
         db.session.commit()
         return "", 204
 
